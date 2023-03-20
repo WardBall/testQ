@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>  
+
+
+$(document).ready(function(){
+    $("button").click(function(){
+        
+        var info = $("input").val();
+        
+        console.log(info);
+        if(info  != null ){
+            $.ajax({
+        url:"https://api.openai.com/v1/completions",
+        type:"post", 
+        dataType:"JSON",
+        contentType:"application/json", 
+        beforeSend:function(XMLHttpRequest){
+            $("p").text("正在加载中,稍微有点慢，耐心等待");
+        },
+        headers:{
+            "Authorization":"Bearer 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", 
+             "model": "text-davinci-003"
+        },
+        data:JSON.stringify ({
+            "model": "text-davinci-003",
+            "prompt": info,
+            "max_tokens": 2048
+        }),
+        success:function(data){     
+            var info;
+            console.log(info);
+            for(var z in data){ 
+                
+                if(z == 'choices'){
+                    
+                    var obj = data[z][0];
+                    //var textinfo = obj[0];  
+                    for(var i in obj){
+                        if(i == "text"){
+                            info = obj[i];
+                        }
+                    }
+                }
+            }  
+
+            $("p").text(info);
+
+        },error:function(msg){ 
+            console.log(msg);
+        }
+       }
+       );
+
+        }
+    });
+});
+
+
+    
+   
+      
+    </script>
+    <div>
+        <input type="text"><button type="button">确认</button>
+        <div>
+            <p>
+
+            </p>
+        </div>
+    </div>
+</body>
+
+
+
+</html>
